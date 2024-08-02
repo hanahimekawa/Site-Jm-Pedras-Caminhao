@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário com Envio para Planilha</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-container button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Formulário</h2>
+        <form id="data-form">
+            <input type="text" id="field1" placeholder="Campo 1" required>
+            <input type="text" id="field2" placeholder="Campo 2" required>
+            <input type="text" id="field3" placeholder="Campo 3" required>
+            <input type="text" id="field4" placeholder="Campo 4" required>
+            <input type="text" id="field5" placeholder="Campo 5" required>
+            <input type="text" id="field6" placeholder="Campo 6" required>
+            <input type="text" id="field7" placeholder="Campo 7" required>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('data-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const apiKey = 'AIzaSyC7_yrWIyBdNxHwy2UTutp6BrldHNWr5iw'; // Substitua pela sua chave da API
+            const spreadsheetId = '16pZCrayKAuiLJQusFu3JUQBCeSs8qSiKd6hJlDqgEIQ'; // Substitua pelo ID da sua planilha
+            const range = 'B2:H2'; // Substitua pelo intervalo da sua planilha
+
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}:append?valueInputOption=RAW&key=${apiKey}`;
+            
+            const data = {
+                values: [
+                    [
+                        document.getElementById('field1').value,
+                        document.getElementById('field2').value,
+                        document.getElementById('field3').value,
+                        document.getElementById('field4').value,
+                        document.getElementById('field5').value,
+                        document.getElementById('field6').value,
+                        document.getElementById('field7').value
+                    ]
+                ]
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Dados enviados com sucesso!');
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao enviar dados.');
+            });
+        });
+    </script>
+</body>
+</html>
